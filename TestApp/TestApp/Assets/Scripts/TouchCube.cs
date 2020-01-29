@@ -1,5 +1,4 @@
-﻿using System;
-using System.Timers;
+﻿using System.Timers;
 using UnityEngine;
 
 public class TouchCube : MonoBehaviour
@@ -8,26 +7,37 @@ public class TouchCube : MonoBehaviour
     private Ray _currentRay;
     private Camera _myCamera;
     private bool _hasTouchMoved;
-    private Timer _touchTimer;
+    private float _touchTimer;
 
     private void Start()
     {
         _myCamera = Camera.main;
+        _touchTimer = 0.0f;
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.touchCount > 0)
         {
             TouchingSomething();
         }
+
+        _touchTimer += Time.deltaTime;
     }
 
     private void TouchingSomething()
     {
         foreach (Touch touch in Input.touches)
         {
-            _currentRay = _myCamera.ScreenPointToRay(touch.position);
+            if (touch.phase == TouchPhase.Began)
+            {
+                _touchTimer = 0.0f;
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                print(_touchTimer);
+            }
+            /*_currentRay = _myCamera.ScreenPointToRay(touch.position);
             Debug.DrawRay(_currentRay.origin, _currentRay.direction * 100, Color.blue);
             RaycastHit hitInfo;
             if (Physics.Raycast(_currentRay, out hitInfo))
@@ -35,11 +45,11 @@ public class TouchCube : MonoBehaviour
                 Controllable controllable = hitInfo.transform.GetComponent<Controllable>();
                 if (controllable.GetBounce()) { controllable.BounceCube(); }
                 else { CubeColour(controllable); }
-            }
+            }*/
         }
     }
 
-    void CubeColour(Controllable controllable)
+    private void CubeColour(Controllable controllable)
     {
         foreach (Touch touch in Input.touches)
         {

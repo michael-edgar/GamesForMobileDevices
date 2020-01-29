@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Controllable : MonoBehaviour
 {
@@ -14,7 +12,7 @@ public class Controllable : MonoBehaviour
         return bounce;
     }
 
-    void Start()
+    private void Start()
     {
         if (GetComponent <Renderer>() && GetComponent <Renderer>().material)
         {
