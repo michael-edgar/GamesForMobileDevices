@@ -2,37 +2,34 @@
 
 public class Controllable : MonoBehaviour
 {
-    [SerializeField]
-    private bool bounce = false;
+    
     private Material _material;
-    private int _direction = 1;
-
-    public bool GetBounce()
-    {
-        return bounce;
-    }
+    private Rigidbody _rigidbody;
+    private Vector3 _direction;
 
     private void Start()
     {
+        _rigidbody = GetComponent<Rigidbody>();
+        
         if (GetComponent <Renderer>() && GetComponent <Renderer>().material)
         {
             _material = GetComponent<Renderer>().material;
         }
     }
-    
-    public void BounceCube()
+
+    public Vector3 GetDirection()
     {
-        gameObject.transform.position += Vector3.up * _direction;
-            
-        if (gameObject.transform.position.y >= 6.0f)
-        {
-            _direction = -1;
-        }
-            
-        else if (gameObject.transform.position.y <= -4.0f)
-        {
-            _direction = 1;
-        }
+        return _direction;
+    }
+
+    public void SetDirection(Vector3 newDirection)
+    {
+        _direction = newDirection;
+    }
+
+    public Rigidbody GetRigidBody()
+    {
+        return _rigidbody;
     }
 
     public void ChangeColour(Color newColour)

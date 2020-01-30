@@ -3,11 +3,12 @@ using UnityEngine;
 
 public class TouchCube : MonoBehaviour
 {
-    
-    private Ray _currentRay;
     private Camera _myCamera;
-    private bool _hasTouchMoved;
     private float _touchTimer;
+    private bool _hasBeenMoved;
+    private Controllable _currentlySelectedCube;
+    private const float MaxTapTime = 0.12f;
+    private readonly float _moveSpeed = 10f;
 
     private void Start()
     {
@@ -19,78 +20,75 @@ public class TouchCube : MonoBehaviour
     {
         if (Input.touchCount > 0)
         {
-            TouchingSomething();
+            ProcessTouch();
         }
 
         _touchTimer += Time.deltaTime;
     }
 
-    private void TouchingSomething()
+    private void ProcessTouch()
     {
         foreach (Touch touch in Input.touches)
         {
-            if (touch.phase == TouchPhase.Began)
+            if (touch.phase == TouchPhase.Began) { ResetTouchChecks(); }
+
+            else if (touch.phase == TouchPhase.Moved)
             {
-                _touchTimer = 0.0f;
+                _hasBeenMoved = true;
+
+                if (_currentlySelectedCube != null)
+                {
+                    Vector3 touchPosition = _myCamera.ScreenToWorldPoint(touch.position);
+                    touchPosition.z = 0;
+                    _currentlySelectedCube.SetDirection(touchPosition - _currentlySelectedCube.transform.position);
+                    float directionX = _currentlySelectedCube.GetDirection().x;
+                    float directionY = _currentlySelectedCube.GetDirection().y;
+                    float directionZ = _currentlySelectedCube.GetDirection().z;
+                    _currentlySelectedCube.GetRigidBody().velocity = new Vector3(directionX, directionY, directionZ) * _moveSpeed;
+                }
             }
+            
             else if (touch.phase == TouchPhase.Ended)
             {
-                print(_touchTimer);
+                if (_currentlySelectedCube != null)
+                {
+                    _currentlySelectedCube.GetRigidBody().velocity = Vector3.zero;
+                }
+                if (_touchTimer <= MaxTapTime && !_hasBeenMoved)
+                {
+                    Ray currentRay = _myCamera.ScreenPointToRay(touch.position);
+                    if (Physics.Raycast(currentRay, out RaycastHit hitInfo))
+                    {
+                        Controllable controllable = hitInfo.transform.GetComponent<Controllable>();
+                        SetCurrentlySelected(controllable);
+                    }
+                    else
+                    {
+                        SetCurrentlySelected(null);
+                    }
+                }
             }
-            /*_currentRay = _myCamera.ScreenPointToRay(touch.position);
-            Debug.DrawRay(_currentRay.origin, _currentRay.direction * 100, Color.blue);
-            RaycastHit hitInfo;
-            if (Physics.Raycast(_currentRay, out hitInfo))
-            {
-                Controllable controllable = hitInfo.transform.GetComponent<Controllable>();
-                if (controllable.GetBounce()) { controllable.BounceCube(); }
-                else { CubeColour(controllable); }
-            }*/
         }
     }
 
-    private void CubeColour(Controllable controllable)
+    private void ResetTouchChecks()
     {
-        foreach (Touch touch in Input.touches)
+        _touchTimer = 0.0f;
+        _hasBeenMoved = false;
+    }
+
+    private void SetCurrentlySelected(Controllable controllable)
+    {
+        if (_currentlySelectedCube != null)
         {
-            switch (touch.phase)
-            {
-                case TouchPhase.Began:
-                {
-                    controllable.ChangeColour(Color.black);
-                    break;
-                }
+            _currentlySelectedCube.ChangeColour(Color.white);
+            _currentlySelectedCube = null;
+        }
 
-                case TouchPhase.Stationary:
-                {
-                    controllable.ChangeColour(Color.blue);
-                    break;
-                }
-
-                case TouchPhase.Moved:
-                {
-                    controllable.ChangeColour(Color.red);
-                    break;
-                }
-
-                case TouchPhase.Ended:
-                {
-                    controllable.ChangeColour(Color.green);
-                    break;
-                }
-
-                case TouchPhase.Canceled:
-                {
-                    controllable.ChangeColour(Color.yellow);
-                    break;
-                }
-                
-                default:
-                {
-                    Debug.LogError("This should never happen ever");
-                    break;
-                }
-            }
+        if (controllable != null)
+        {
+            controllable.ChangeColour(Color.blue);
+            _currentlySelectedCube = controllable;
         }
     }
 }
