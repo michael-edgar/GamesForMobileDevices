@@ -1,5 +1,4 @@
-﻿using System.Timers;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TouchCube : MonoBehaviour
 {
@@ -8,58 +7,73 @@ public class TouchCube : MonoBehaviour
     private bool _hasBeenMoved;
     private Controllable _currentlySelectedCube;
     private const float MaxTapTime = 0.12f;
-    private readonly float _moveSpeed = 10f;
+    private float _distanceToCube;
+    private Vector3 _rotationAxis;
+    private float _startAngle;
+    private Quaternion _startRotation;
+    private float _yDistance;
+    private float _xDistance;
 
     private void Start()
     {
         _myCamera = Camera.main;
         _touchTimer = 0.0f;
+        _distanceToCube = 0.0f;
+        _rotationAxis = _myCamera.transform.forward;
+        _startAngle = 0.0f;
+        _startRotation = Quaternion.identity;
+        _yDistance = 0.0f;
+        _xDistance = 0.0f;
     }
 
     private void Update()
     {
-        if (Input.touchCount > 0)
+        _rotationAxis = _myCamera.transform.forward;
+        
+        if (Input.touchCount == 1)
         {
-            ProcessTouch();
+            ProcessTouchAndDrag();
+        }
+        
+        if (Input.touchCount > 1)
+        {
+            ProcessScaleAndRotate();
         }
 
         _touchTimer += Time.deltaTime;
     }
 
-    private void ProcessTouch()
+    private void ProcessTouchAndDrag()
     {
-        foreach (Touch touch in Input.touches)
+        Touch touch = Input.touches[0];
+        Ray currentRay = _myCamera.ScreenPointToRay(touch.position);
+        switch (touch.phase)
         {
-            if (touch.phase == TouchPhase.Began) { ResetTouchChecks(); }
+            case TouchPhase.Began:
+            {
+                ResetTouchChecks();
 
-            else if (touch.phase == TouchPhase.Moved)
+                if (Physics.Raycast(currentRay, out RaycastHit startHit) &&
+                    startHit.transform.GetComponent<Controllable>() == _currentlySelectedCube)
+                    _distanceToCube = (startHit.transform.position - transform.position).magnitude;
+                break;
+            }
+            case TouchPhase.Moved:
             {
                 _hasBeenMoved = true;
 
-                if (_currentlySelectedCube != null)
-                {
-                    Vector3 touchPosition = _myCamera.ScreenToWorldPoint(touch.position);
-                    touchPosition.z = 0;
-                    _currentlySelectedCube.SetDirection(touchPosition - _currentlySelectedCube.transform.position);
-                    float directionX = _currentlySelectedCube.GetDirection().x;
-                    float directionY = _currentlySelectedCube.GetDirection().y;
-                    float directionZ = _currentlySelectedCube.GetDirection().z;
-                    _currentlySelectedCube.GetRigidBody().velocity = new Vector3(directionX, directionY, directionZ) * _moveSpeed;
-                }
+                if (_currentlySelectedCube)
+                    _currentlySelectedCube.transform.position = currentRay.GetPoint(_distanceToCube);
+
+                break;
             }
-            
-            else if (touch.phase == TouchPhase.Ended)
+            case TouchPhase.Ended:
             {
-                if (_currentlySelectedCube != null)
-                {
-                    _currentlySelectedCube.GetRigidBody().velocity = Vector3.zero;
-                }
                 if (_touchTimer <= MaxTapTime && !_hasBeenMoved)
                 {
-                    Ray currentRay = _myCamera.ScreenPointToRay(touch.position);
-                    if (Physics.Raycast(currentRay, out RaycastHit hitInfo))
+                    if (Physics.Raycast(currentRay, out RaycastHit endHit))
                     {
-                        Controllable controllable = hitInfo.transform.GetComponent<Controllable>();
+                        Controllable controllable = endHit.transform.GetComponent<Controllable>();
                         SetCurrentlySelected(controllable);
                     }
                     else
@@ -67,9 +81,44 @@ public class TouchCube : MonoBehaviour
                         SetCurrentlySelected(null);
                     }
                 }
+
+                break;
             }
         }
     }
+
+    private void ProcessScaleAndRotate()
+    {
+        if (_currentlySelectedCube)
+        {
+            Touch firstTouch = Input.touches[0];
+            Touch secondTouch = Input.touches[1];
+            _yDistance = (secondTouch.position.y - firstTouch.position.y);
+            _xDistance = (secondTouch.position.x - firstTouch.position.x);
+
+            if (firstTouch.phase == TouchPhase.Began || secondTouch.phase == TouchPhase.Began)
+            {
+                _startAngle = Mathf.Atan2(_yDistance, _xDistance);
+                _startRotation = _currentlySelectedCube.transform.rotation;
+            }
+
+            if (firstTouch.phase == TouchPhase.Moved || secondTouch.phase == TouchPhase.Moved)
+            {
+                float newAngle = Mathf.Atan2(_yDistance, _xDistance);
+                float anglesDifference = Mathf.Rad2Deg * (newAngle - _startAngle);
+                _currentlySelectedCube.transform.rotation = Quaternion.AngleAxis(anglesDifference, _rotationAxis) * _startRotation;
+            }
+
+            if (firstTouch.phase == TouchPhase.Ended || secondTouch.phase == TouchPhase.Ended)
+            {
+                _yDistance = 0.0f;
+                _xDistance = 0.0f;
+                _startAngle = 0.0f;
+                _startRotation = Quaternion.identity;
+            }
+        }
+    }
+
 
     private void ResetTouchChecks()
     {
@@ -79,13 +128,13 @@ public class TouchCube : MonoBehaviour
 
     private void SetCurrentlySelected(Controllable controllable)
     {
-        if (_currentlySelectedCube != null)
+        if (_currentlySelectedCube)
         {
             _currentlySelectedCube.ChangeColour(Color.white);
             _currentlySelectedCube = null;
         }
 
-        if (controllable != null)
+        if (controllable)
         {
             controllable.ChangeColour(Color.blue);
             _currentlySelectedCube = controllable;
