@@ -8,7 +8,8 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="Controllable.cs" t="Include" />
-          <e p="TouchCube.cs" t="Include" />
+          <e p="Movement.cs" t="Include" />
+          <e p="Reset.cs" t="Include" />
         </e>
       </e>
       <e p="obj" t="ExcludeRecursive" />
