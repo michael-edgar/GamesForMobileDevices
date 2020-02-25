@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\micha\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\micha\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_Advertising Manager.-1772298792.00" t="ExcludeRecursive" />
+    <e p="C:\Users\micha\OneDrive\Documents\GitHub\GamesForMobileDevices\TestApp\Advertising Manager" t="IncludeRecursive">
+      <e p="Advertising Manager.sln" t="IncludeFlat" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="AdManager.cs" t="Include" />
+        </e>
+        <e p="UnityAds" t="Include">
+          <e p="link.xml" t="Include" />
+        </e>
+      </e>
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
