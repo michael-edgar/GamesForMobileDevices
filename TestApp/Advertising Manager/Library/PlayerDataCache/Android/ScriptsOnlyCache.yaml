@@ -1,7 +1,10 @@
 ScriptsOnlyBuild:
   usedScripts:
+    Assembly-CSharp-Editor.dll:
+    - GoogleMobileAds.Editor.GoogleMobileAdsSettings
     Assembly-CSharp.dll:
     - AdManager
+    - GoogleMobileAds.Common.MobileAdsEventExecutor
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.RiderScriptEditorData
     UnityEditor.TestRunner.dll:
@@ -41,21 +44,23 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9718}
+      Script: {instanceID: 9848}
     - Class: 114
-      Script: {instanceID: 9884}
+      Script: {instanceID: 10034}
     - Class: 114
-      Script: {instanceID: 9926}
+      Script: {instanceID: 10084}
     - Class: 114
-      Script: {instanceID: 10296}
+      Script: {instanceID: 10498}
     - Class: 114
-      Script: {instanceID: 10508}
+      Script: {instanceID: 10750}
     - Class: 114
-      Script: {instanceID: 10668}
+      Script: {instanceID: 10896}
     - Class: 114
-      Script: {instanceID: 11112}
+      Script: {instanceID: 10936}
     - Class: 114
-      Script: {instanceID: 11468}
+      Script: {instanceID: 11452}
+    - Class: 114
+      Script: {instanceID: 11850}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -303,7 +308,7 @@ ScriptsOnlyBuild:
     className: SignalTrack
   - hash:
       serializedVersion: 2
-      Hash: 2a9961f6dcf354a8170f92daf25428a0
+      Hash: fae9a236a133d69ecc21e502086e4f2a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: AdManager
@@ -325,6 +330,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.Monetization.Editor.dll
     namespaceName: UnityEngine.Monetization
     className: Placeholder
+  - hash:
+      serializedVersion: 2
+      Hash: 6fb512c6733e02f441372611e6f94f11
+    assemblyName: Assembly-CSharp-Editor.dll
+    namespaceName: GoogleMobileAds.Editor
+    className: GoogleMobileAdsSettings
   - hash:
       serializedVersion: 2
       Hash: 4fd8bf02e3089425d3502e26c44ba31a
@@ -397,6 +408,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: TimelineAsset
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: GoogleMobileAds.Common
+    className: MobileAdsEventExecutor
   - hash:
       serializedVersion: 2
       Hash: 3b760e6526e13f7504f59e210145899a
