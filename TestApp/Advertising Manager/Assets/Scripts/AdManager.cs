@@ -6,178 +6,212 @@ using UnityEngine.UI;
 
 public class AdManager : MonoBehaviour, IUnityAdsListener
 {
-    [SerializeField] private bool testMode = true;
-    [SerializeField] private bool enablePerPlacementLoad = false;
-    [SerializeField] private bool isPlatformAndroid = true;
-    [SerializeField] private int numberOfCoins = 0;
-    [SerializeField] private int numberOfTokens = 0;
-    [SerializeField] private Text textBox;
+    private bool _testMode;
+    private bool _enablePerPlacementLoad;
     private RewardBasedVideoAd _adMobRewardedVideoAd;
     private InterstitialAd _adMobInterstitialAd;
     private BannerView _adMobBannerView;
-    private const string TextNumberOfCoins = "The player has earned ";
-    private const string AdMobGameIdAndroid = "ca-app-pub-1272408203130077~9243552470";
-    private const string UnityGameIdAndroid = "3483587";
-    private const string UnityGameIdApple = "3483586";
-    private const string AdMobRewardedVideoAdId = "ca-app-pub-3940256099942544/5224354917";
-    private const string AdMobInterstitialAdId = "ca-app-pub-3940256099942544/1033173712";
-    private const string AdMobMenuBannerAdId = "ca-app-pub-3940256099942544/6300978111";
-    private const string UnityRewardedVideoPlacementId = "rewardedVideo";
-    private const string UnityInterstitialPlacementId = "video";
-    private const string UnityMenuBannerPlacementId = "MenuBanner";
+    private string _adMobGameId;
+    private string _unityGameId;
+    private string _adMobRewardedVideoAdId;
+    private string _adMobInterstitialAdId;
+    private string _adMobMenuBannerAdId;
+    private string _unityRewardedVideoPlacementId;
+    private string _unityInterstitialPlacementId;
+    private string _unityMenuBannerPlacementId;
+
+    public void SetTestMode(bool testMode)
+    {
+        _testMode = testMode;
+    }
+
+    public void SetEnablePerPlacementLoad(bool enablePerPlacementLoad)
+    {
+        _enablePerPlacementLoad = enablePerPlacementLoad;
+    }
+    
+    public void SetAdMobGameId(string adMobGameId)
+    {
+        _adMobGameId = adMobGameId;
+    }
+
+    public void SetUnityGameId(string unityGameId)
+    {
+        _unityGameId = unityGameId;
+    }
+
+    public void SetAdMobRewardedVideoId(string adMobRewardedVideoId)
+    {
+        _adMobRewardedVideoAdId = adMobRewardedVideoId;
+    }
+
+
+    public void SetAdMobInterstitialAdId(string adMobInterstitialVideoId)
+    {
+        _adMobInterstitialAdId = adMobInterstitialVideoId;
+    }
+
+    public void SetAdMobMenuBannerAdId(string adMobMenuBannerAdId)
+    {
+        _adMobMenuBannerAdId = adMobMenuBannerAdId;
+    }
+
+    public void SetUnityRewardedVideoPlacementId(string unityRewardedVideoPlacementId)
+    {
+        _unityRewardedVideoPlacementId = unityRewardedVideoPlacementId;
+    }
+
+    public void SetUnityInterstitialPlacementId(string unityInterstitialPlacementId)
+    {
+        _unityInterstitialPlacementId = unityInterstitialPlacementId;
+    }
+
+    public void SetUnityMenuBannerPlacementId(string unityMenuBannerPlacementId)
+    {
+        _unityMenuBannerPlacementId = unityMenuBannerPlacementId;
+    }
 
     public void OnUnityAdsReady (string placementId) {
-        // Causes ad to constantly play 
-        //Advertisement.Show (placementId);
+        GameDriver.SendMessage("Unity ad is ready", false);
     }
     
     public void OnUnityAdsDidError (string errorMessage) {
-        Debug.LogWarning (errorMessage);
+        GameDriver.SendMessage(errorMessage, true);
     }
     
     public void OnUnityAdsDidStart (string placementId) {
-        Debug.Log ("The ad started playing.");
+        GameDriver.SendMessage("The ad started playing", false);
     }
     
     public void OnUnityAdsDidFinish (string placementId, ShowResult showResult) {
         if(showResult == ShowResult.Finished) {
             // Reward the user for watching the ad to completion.
-            numberOfCoins++;
+            GameDriver.EarnACoin();
+            GameDriver.SendMessage("Player earned a coin", false);
         } else if (showResult == ShowResult.Skipped) {
             // Do not reward the user for skipping the ad.
-            numberOfCoins--;
+            GameDriver.LoseACoin();
+            GameDriver.SendMessage("Player lost a coin", false);
         } else if (showResult == ShowResult.Failed) {
-            Debug.LogWarning ("The ad did not finish due to an error.");
+            GameDriver.SendMessage("The ad did not finish due to an error", true);
         }
     }
 
     private void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
     {
-        print("HandleRewardBasedVideoLoaded event received");
+        GameDriver.SendMessage("HandleRewardBasedVideoLoaded event received", false);
         _adMobRewardedVideoAd.Show();
     }
 
     private void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-        print("HandleRewardBasedVideoFailedToLoad event received with message: " + args.Message);    }
+        GameDriver.SendMessage("HandleRewardBasedVideoFailedToLoad event received with message: "+args.Message, true);
+    }
 
     private void HandleRewardBasedVideoOpened(object sender, EventArgs args)
     {
-        print("HandleRewardBasedVideoOpened event received");
+        GameDriver.SendMessage("HandleRewardBasedVideoOpened event received", false);
     }
 
     private void HandleRewardBasedVideoStarted(object sender, EventArgs args)
     {
-        print("HandleRewardBasedVideoStarted event received");
+        GameDriver.SendMessage("HandleRewardBasedVideoStarted event received", false);
     }
     
     public void HandleRewardBasedVideoRewarded(object sender, Reward args)
     {
         string type = args.Type;
         double amount = args.Amount;
-        print("HandleRewardBasedVideoRewarded event received for " + amount + " " + type);
-        numberOfTokens++;
+        GameDriver.SendMessage("HandleRewardBasedVideoRewarded event received for "+amount+" "+type, false);
+        GameDriver.EarnAToken();
     }
 
     private void HandleRewardBasedVideoClosed(object sender, EventArgs args)
     {
-        print("HandleRewardBasedVideoClosed event received");
+        GameDriver.SendMessage("HandleRewardBasedVideoClosed event received", false);
     }
 
     private void HandleRewardBasedVideoLeftApplication(object sender, EventArgs args)
     {
-        print("HandleRewardBasedVideoLeftApplication event received");
+        GameDriver.SendMessage("HandleRewardBasedVideoLeftApplication event received", false);
     }
 
     public void AdMobEnableRewardedVideoAd()
     {
         AdRequest request = new AdRequest.Builder().Build();
-        _adMobRewardedVideoAd.LoadAd(request, AdMobRewardedVideoAdId);
+        _adMobRewardedVideoAd.LoadAd(request, _adMobRewardedVideoAdId);
     }
 
     private void HandleInterstitialAdLoaded(object sender, EventArgs args)
     {
-        print("HandleAdLoaded event received");
+        GameDriver.SendMessage("HandleAdLoaded event received", false);
         _adMobInterstitialAd.Show();
     }
 
     private void HandleInterstitialAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-        print("HandleFailedToReceiveAd event received with message: " + args.Message);
+        GameDriver.SendMessage("HandleFailedToReceiveAd event received with message: "+args.Message, true);
     }
 
     private void HandleInterstitialAdOpened(object sender, EventArgs args)
     {
-        print("HandleAdOpened event received");
+        //print("HandleAdOpened event received");
+        GameDriver.SendMessage("HandleAdOpened event received", false);
     }
 
     private void HandleInterstitialAdClosed(object sender, EventArgs args)
     {
-        print("HandleAdClosed event received");
+        GameDriver.SendMessage("HandleAdClosed event received", false);
         //_adMobInterstitialAd.Destroy();
     }
 
     private void HandleInterstitialAdLeavingApplication(object sender, EventArgs args)
     {
-        print("HandleAdLeavingApplication event received");
+        GameDriver.SendMessage("HandleAdLeavingApplication event received", false);
         //_adMobInterstitialAd.Destroy();
     }
 
     public void AdMobEnableInterstitialAd()
     {
-        _adMobInterstitialAd = new InterstitialAd(AdMobInterstitialAdId);
+        _adMobInterstitialAd = new InterstitialAd(_adMobInterstitialAdId);
         AdRequest request = new AdRequest.Builder().Build();
         _adMobInterstitialAd.LoadAd(request);
     }
 
     public void AdMobEnableBannerAd()
     {
-        _adMobBannerView = new BannerView(AdMobMenuBannerAdId, AdSize.Banner, AdPosition.Top);
+        _adMobBannerView = new BannerView(_adMobMenuBannerAdId, AdSize.Banner, AdPosition.Top);
         AdRequest request = new AdRequest.Builder().Build();
         _adMobBannerView.LoadAd(request);
     }
 
     public void UnityEnableRewardedVideoAd()
     {
-        Advertisement.Load(UnityRewardedVideoPlacementId);
-        Advertisement.Show(UnityRewardedVideoPlacementId);
+        Advertisement.Load(_unityRewardedVideoPlacementId);
+        Advertisement.Show(_unityRewardedVideoPlacementId);
     }
     
     public void UnityEnableInterstitialAd()
     {
-        Advertisement.Load(UnityInterstitialPlacementId);
-        Advertisement.Show(UnityInterstitialPlacementId);
+        Advertisement.Load(_unityInterstitialPlacementId);
+        Advertisement.Show(_unityInterstitialPlacementId);
     }
     
     public void UnityEnableBannerAd()
     {
         Advertisement.Banner.Load();
-        Advertisement.Banner.Show(UnityMenuBannerPlacementId);
-    }
-
-    private void UpdateTextField()
-    {
-        if (textBox)
-        {
-            textBox.text = TextNumberOfCoins + "" + numberOfCoins + " coins and " + numberOfTokens + " tokens";
-        }
-        else
-        {
-            Debug.LogError("Text box object not set");
-        }
+        Advertisement.Banner.Show(_unityMenuBannerPlacementId);
     }
 
     // Start is called before the first frame update
-    void Start()
+    public void SetUpAdvertising()
     {
-        string gameId = isPlatformAndroid ? UnityGameIdAndroid : UnityGameIdApple;
         Advertisement.AddListener(GetComponent<IUnityAdsListener>());
-        Advertisement.Initialize(gameId, testMode, enablePerPlacementLoad);
+        Advertisement.Initialize(_unityGameId, _testMode, _enablePerPlacementLoad);
         Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
-        UpdateTextField();
         _adMobRewardedVideoAd = RewardBasedVideoAd.Instance;
         AddListeners();
-        MobileAds.Initialize(AdMobGameIdAndroid);
+        MobileAds.Initialize(_adMobGameId);
     }
 
     private void AddListeners()
@@ -199,8 +233,6 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
 
     private void Update()
     {
-        UpdateTextField();
-        
         if(_adMobInterstitialAd.IsLoaded())
             _adMobInterstitialAd.Show();
     }

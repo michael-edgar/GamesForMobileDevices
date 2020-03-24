@@ -92,6 +92,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="AdManager.cs" t="Include" />
+          <e p="GameDriver.cs" t="Include" />
         </e>
         <e p="UnityAds" t="Include">
           <e p="link.xml" t="Include" />
