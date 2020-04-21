@@ -1,0 +1,72 @@
+! comment lines
+! world is 8 chars wide
+! Symbols:
+!
+!	- nothing
+!	# wall floor to ceiling
+!	0-F are cube heights
+!	letters > h  are prefabs
+!	g - left door
+!	G right door
+!	T trigger for door
+!	R robot target
+!	P player
+!
+!	player height is designated in numbers on the floating grid
+!
+! lines are read from the bottom up, so the first line is farthest away from the player at the start
+
+[FLOOR]
+BCDEFFFgGFFFEDCB
+210000300300000E
+2100--1001--08EE
+230000122100009E
+2313008221000008
+2102222220000161
+2102221000000115
+40-2-06510930710
+21-2222222211810
+21-0-0-0-12-0-1-
+2111111112211110
+2151116112260110
+4181000122250110
+31-0412221111110
+0101112-01010101
+200112201-000110
+[FLOATING]
+!
+! floating numbers are the height and position of the player
+-------SS-------
+------R-1R----S-
+--------2-------
+--------2-------
+--------2-------
+------2---------
+---2------R-----
+R--2--R-R-------
+--R22222222-----
+-R---R---R2R----
+----R-R---2R----
+---------R------
+---------2------
+----R-2---------
+----R-2--------
+------2---------
+!R-R-R2R-R-R-R-R
+!-------SS-------
+!--------1-----S-
+!--------2-R-----
+!--------2-----S-
+!R-------2-----S-
+!----2-R---------
+!---2--R---------
+!R--2------------
+!-R-2-2--2222----
+!-R------R--2----
+!---------RR2----
+!-----R--R-2-----
+!----------------
+!-------222--2---
+!---R-2----------
+!---R--2---------
+!-------2--------

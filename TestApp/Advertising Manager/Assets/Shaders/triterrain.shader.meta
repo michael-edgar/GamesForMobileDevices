@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 2a556cc66f72346efaed9728e0460f3c
+ShaderImporter:
+  defaultTextures:
+  - _Side: {fileID: 2800000, guid: 55422ca1aae564b24b8ceb1e4bc324f2, type: 3}
+  - _Top: {fileID: 2800000, guid: 9aed3b89f92d24017b1f047bfe40f532, type: 3}
+  - _Bottom: {fileID: 2800000, guid: ec4dd1674276b4963bd23634a8143ee5, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

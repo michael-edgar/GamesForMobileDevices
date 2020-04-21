@@ -1,0 +1,8 @@
+https://codelabs.developers.google.com/codelabs/playservices_unity/index.html?index=..%2F..index#2
+
+https://github.com/playgameservices/play-games-plugin-for-unity
+
+https://www.google.com/search?rlz=1C1CHBF_enIE849IE849&sxsrf=ALeKk03Jc939Gke_VgUyhvkOZKD1rg1ctg%3A1585818249485&ei=iaqFXoWbHaOd1fAPkJOrmAs&q=google+achievements+unity&oq=google+achievements+unity&gs_lcp=CgZwc3ktYWIQAzIGCAAQBxAeMgYIABAHEB4yBAgAEB4yBggAEAgQHjoECAAQRzoICAAQCBAHEB5Ql7wCWJXBAmDdwgJoAHADeACAAUGIAdUCkgEBNpgBAKABAaoBB2d3cy13aXo&sclient=psy-ab&ved=0ahUKEwjFg8GrscnoAhWjThUIHZDJCrMQ4dUDCAs&uact=5
+
+https://play.google.com/apps/publish/?account=5531858921619593559#ManageReleasesPlace:p=tmp.03658978533343983359.1585819230251.587417134&appid=4975932707769797877
+

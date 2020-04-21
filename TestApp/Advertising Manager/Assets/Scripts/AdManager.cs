@@ -136,12 +136,6 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         GameDriver.SendMessage("HandleRewardBasedVideoLeftApplication event received", false);
     }
 
-    public void AdMobEnableRewardedVideoAd()
-    {
-        AdRequest request = new AdRequest.Builder().Build();
-        _adMobRewardedVideoAd.LoadAd(request, _adMobRewardedVideoAdId);
-    }
-
     private void HandleInterstitialAdLoaded(object sender, EventArgs args)
     {
         GameDriver.SendMessage("HandleAdLoaded event received", false);
@@ -171,6 +165,12 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         //_adMobInterstitialAd.Destroy();
     }
 
+    public void AdMobEnableRewardedVideoAd()
+    {
+        AdRequest request = new AdRequest.Builder().Build();
+        _adMobRewardedVideoAd.LoadAd(request, _adMobRewardedVideoAdId);
+    }
+
     public void AdMobEnableInterstitialAd()
     {
         _adMobInterstitialAd = new InterstitialAd(_adMobInterstitialAdId);
@@ -183,6 +183,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         _adMobBannerView = new BannerView(_adMobMenuBannerAdId, AdSize.Banner, AdPosition.Top);
         AdRequest request = new AdRequest.Builder().Build();
         _adMobBannerView.LoadAd(request);
+        GameDriver.SendMessage("Start AdMob timer", false);
     }
 
     public void UnityEnableRewardedVideoAd()
@@ -201,6 +202,19 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     {
         Advertisement.Banner.Load();
         Advertisement.Banner.Show(_unityMenuBannerPlacementId);
+        GameDriver.SendMessage("Start Unity timer", false);
+    }
+
+    public void DestroyBanners(bool isUnityBanner)
+    {
+        if (isUnityBanner)
+        {
+            Advertisement.Banner.Hide();
+        }
+        else
+        {
+            _adMobBannerView.Destroy();
+        }
     }
 
     // Start is called before the first frame update
@@ -233,7 +247,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
 
     private void Update()
     {
-        if(_adMobInterstitialAd.IsLoaded())
+        if(_adMobInterstitialAd != null && _adMobInterstitialAd.IsLoaded())
             _adMobInterstitialAd.Show();
     }
 }
