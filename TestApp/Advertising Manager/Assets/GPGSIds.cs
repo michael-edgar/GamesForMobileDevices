@@ -25,6 +25,8 @@
 public static class GPGSIds
 {
         public const string leaderboard_targets_hit_in_one_level = "CgkIjO7f_t0IEAIQAQ"; // <GPGSID>
+        public const string achievement_ad_time_1 = "CgkIjO7f_t0IEAIQBA"; // <GPGSID>
+        public const string achievement_ad_time_2 = "CgkIjO7f_t0IEAIQBQ"; // <GPGSID>
         public const string achievement_sharpshooter = "CgkIjO7f_t0IEAIQAw"; // <GPGSID>
         public const string achievement_welcome_to_lollygagger = "CgkIjO7f_t0IEAIQAg"; // <GPGSID>
 

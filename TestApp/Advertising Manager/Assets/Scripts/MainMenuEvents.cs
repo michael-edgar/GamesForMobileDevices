@@ -131,6 +131,20 @@ public class MainMenuEvents : MonoBehaviour
 	public void StartAdManager()
 	{
 		Debug.Log("Time to start AdManager");
+		toBlack = true;
+		// Make sure the texture is enabled.
+		mFader.gameObject.SetActive(true);
+		
+		// Start fading towards black.
+		FadeToBlack();
+
+		FadeController fader = gameObject.GetComponentInChildren<FadeController>();
+		if (fader != null) {
+			fader.FadeToLevel(()=>SceneManager.LoadScene("SampleScene"));
+		}
+		else {
+			SceneManager.LoadScene("SampleScene");
+		}
 	}
 	
     void LateUpdate()

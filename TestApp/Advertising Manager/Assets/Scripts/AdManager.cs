@@ -1,5 +1,6 @@
 ﻿using System;
 using GoogleMobileAds.Api;
+using GooglePlayGames;
 using UnityEngine;
 using UnityEngine.Advertisements;
 using UnityEngine.UI;
@@ -176,6 +177,18 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         _adMobInterstitialAd = new InterstitialAd(_adMobInterstitialAdId);
         AdRequest request = new AdRequest.Builder().Build();
         _adMobInterstitialAd.LoadAd(request);
+        //AdMob Achievement Unlock
+        // Only do achievements if the user is signed in
+        if (Social.localUser.authenticated) {
+            // Unlock the "welcome" achievement, it is OK to
+            // unlock multiple times, only the first time matters.
+            PlayGamesPlatform.Instance.ReportProgress(
+                GPGSIds.achievement_ad_time_1,
+                100.0f, (bool success) => {
+                    Debug.Log("(Lollygagger) Ad Time 1 Unlock: " +
+                              success);
+                });
+        } // end of isAuthenticated
     }
 
     public void AdMobEnableBannerAd()
@@ -196,6 +209,18 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     {
         Advertisement.Load(_unityInterstitialPlacementId);
         Advertisement.Show(_unityInterstitialPlacementId);
+        //Unity Achievement Unlock
+        // Only do achievements if the user is signed in
+        if (Social.localUser.authenticated) {
+            // Unlock the "welcome" achievement, it is OK to
+            // unlock multiple times, only the first time matters.
+            PlayGamesPlatform.Instance.ReportProgress(
+                GPGSIds.achievement_ad_time_2,
+                100.0f, (bool success) => {
+                    Debug.Log("(Lollygagger) Ad Time 2 Unlock: " +
+                              success);
+                });
+        } // end of isAuthenticated
     }
     
     public void UnityEnableBannerAd()
