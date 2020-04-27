@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 using UnityEngine;
+using GooglePlayGames;
 using System.Collections;
 
 // Controls the Android "targets".
@@ -62,11 +63,33 @@ public class DroidController : MonoBehaviour
 		// if we are alive and hit by a projectile, then die.
 		// and turn off the constraint to stand up so we bounce around.
 		if (!isDead && col.gameObject.tag.Equals ("Projectile")) {
+			GameManager.Instance.IncrementHits();
 			Rigidbody rb = GetComponent<Rigidbody> ();
 			rb.constraints = RigidbodyConstraints.None;
 			rb.useGravity = true;
 			Die ();
 		}
+		
+		// Only do achievements if the user is signed in
+		if (Social.localUser.authenticated) {
+			// Unlock the "welcome" achievement, it is OK to
+			// unlock multiple times, only the first time matters.
+			PlayGamesPlatform.Instance.ReportProgress(
+				GPGSIds.achievement_welcome_to_lollygagger,
+				100.0f, (bool success) => {
+					Debug.Log("(Lollygagger) Welcome Unlock: " +
+					          success);
+				});
+
+			// Increment the "sharpshooter" achievement
+			PlayGamesPlatform.Instance.IncrementAchievement(
+				GPGSIds.achievement_sharpshooter,
+				1,
+				(bool success) => {
+					Debug.Log("(Lollygagger) Sharpshooter Increment: " +
+					          success);
+				});
+		} // end of isAuthenticated
 	}
 
 	// When I get hit, I should be in dead mode.
