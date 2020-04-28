@@ -217,7 +217,7 @@ public class Movement : MonoBehaviour
     private void ProcessObjectScaleAndRotate(Touch firstTouch, Touch secondTouch)
     {
         float anglesDifference = Mathf.Rad2Deg * (Mathf.Atan2(_yDistance, _xDistance) - _startAngle);
-        if (anglesDifference >= MinRotateDistance)
+        if (anglesDifference >= MinRotateDistance || anglesDifference <= -MinRotateDistance)
         {
             _currentlySelectedCube.transform.rotation = Quaternion.AngleAxis(anglesDifference, _rotationAxis) * _startRotation;
             _isRotating = true;
@@ -237,7 +237,7 @@ public class Movement : MonoBehaviour
     {
         float anglesDifference = Mathf.Rad2Deg * (Mathf.Atan2(_yDistance, _xDistance) - _startAngle);
         //rotating using two finger circular motion
-        if (anglesDifference >= MinRotateDistance)
+        if (anglesDifference >= MinRotateDistance || anglesDifference <= -MinRotateDistance)
         {
             _myCamera.transform.rotation = Quaternion.AngleAxis(anglesDifference, _rotationAxis) * _startRotation;
             _zAngle = _myCamera.transform.rotation.z;
