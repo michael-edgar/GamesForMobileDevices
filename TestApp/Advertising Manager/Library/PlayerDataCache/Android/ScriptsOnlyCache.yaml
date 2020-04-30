@@ -811,4 +811,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/SampleScene.unity
   - Assets/GameScene.unity
   playerPath: D:/OneDrive/Documents/GitHub/GamesForMobileDevices/TestApp/Advertising
-    Manager/Builds/Advertising Manager.apk
+    Manager/Builds/Advertising Manager.aab
