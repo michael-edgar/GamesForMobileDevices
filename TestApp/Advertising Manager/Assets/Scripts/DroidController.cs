@@ -77,8 +77,7 @@ public class DroidController : MonoBehaviour
 			PlayGamesPlatform.Instance.ReportProgress(
 				GPGSIds.achievement_welcome_to_lollygagger,
 				100.0f, (bool success) => {
-					Debug.Log("(Lollygagger) Welcome Unlock: " +
-					          success);
+					//Debug.Log("(Lollygagger) Welcome Unlock: " + success);
 				});
 
 			// Increment the "sharpshooter" achievement
@@ -86,8 +85,7 @@ public class DroidController : MonoBehaviour
 				GPGSIds.achievement_sharpshooter,
 				1,
 				(bool success) => {
-					Debug.Log("(Lollygagger) Sharpshooter Increment: " +
-					          success);
+					//Debug.Log("(Lollygagger) Sharpshooter Increment: " + success);
 				});
 		} // end of isAuthenticated
 	}

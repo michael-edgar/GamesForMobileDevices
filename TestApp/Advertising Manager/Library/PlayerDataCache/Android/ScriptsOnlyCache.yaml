@@ -516,7 +516,7 @@ ScriptsOnlyBuild:
     className: AdManager
   - hash:
       serializedVersion: 2
-      Hash: 0ef46b8a0bddf0fa99c0ba90d541df0c
+      Hash: abcb15e6e2d0c2d5150a8b451966c2b8
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager

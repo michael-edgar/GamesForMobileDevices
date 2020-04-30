@@ -217,6 +217,7 @@
         <e p="Resources" t="Include">
           <e p="gunner0.txt" t="Include" />
           <e p="gunner1.txt" t="Include" />
+          <e p="gunner2.txt" t="Include" />
         </e>
         <e p="Scripts" t="Include">
           <e p="AdManager.cs" t="Include" />

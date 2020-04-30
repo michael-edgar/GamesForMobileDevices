@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Text;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
@@ -37,8 +38,10 @@ public class GameManager : MonoBehaviour
 	private Vector3 mCannonForward;
 	private LevelManager mLevelManager;
 	public GameObject mEndMenu;
+	public GameObject mGameMenu;
     public Button mainMenuButton;
     public Button restartMenuButton;
+    public Text currentScoreText;
 	
 	public GameManager ()
 	{
@@ -52,6 +55,7 @@ public class GameManager : MonoBehaviour
 	void Awake ()
 	{
 		DontDestroyOnLoad (gameObject);
+		GetCurrentScore();
 	}
 
 
@@ -146,6 +150,7 @@ public class GameManager : MonoBehaviour
         }
 
         WriteUpdatedScore();
+        mGameMenu.SetActive(false);
         mEndMenu.SetActive (true);
 	}
 
@@ -168,12 +173,14 @@ public class GameManager : MonoBehaviour
 		if (fader != null) {
 			fader.FadeToLevel(()=>{
 			mEndMenu.SetActive (false);
+			mGameMenu.SetActive(true);
 			fader.StartScene();
 			mPlayer.GetComponent<Movement> ().StartLevel ();
 			});
 		}
 		else {
 			mEndMenu.SetActive (false);
+			mGameMenu.SetActive(true);
 			mPlayer.GetComponent<Movement> ().StartLevel ();
 		}
     
@@ -186,6 +193,7 @@ public class GameManager : MonoBehaviour
 		if (fader != null) {
 			fader.FadeToLevel(()=>{
 			mEndMenu.SetActive (false);
+			mGameMenu.SetActive(true);
 			fader.StartScene();
 			mLevel = (mLevel + 1) % numLevels;
 			mPlayer.GetComponent<Movement> ().StartLevel ();
@@ -193,6 +201,7 @@ public class GameManager : MonoBehaviour
 		}
 		else {
 			mEndMenu.SetActive (false);
+			mGameMenu.SetActive(true);
 			mLevel = (mLevel + 1) % numLevels;
 			mPlayer.GetComponent<Movement> ().StartLevel ();
 		}
@@ -203,6 +212,7 @@ public class GameManager : MonoBehaviour
 	public void IncrementHits()
 	{
 		mHits = mHits + 1;
+		//WriteUpdatedScore();
 	}
 
 	public void ReadSavedGame(string filename, Action<SavedGameRequestStatus, ISavedGameMetadata> callback)
@@ -211,8 +221,7 @@ public class GameManager : MonoBehaviour
 		savedGameClient.OpenWithAutomaticConflictResolution(filename, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLongestPlaytime, callback);
 	}
 
-	public void WriteSavedGame(ISavedGameMetadata game, byte[] savedData,
-		Action<SavedGameRequestStatus, ISavedGameMetadata> callback)
+	public void WriteSavedGame(ISavedGameMetadata game, byte[] savedData, Action<SavedGameRequestStatus, ISavedGameMetadata> callback)
 	{
 		SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder().WithUpdatedPlayedTime(TimeSpan.FromMinutes(game.TotalTimePlayed.Minutes + 1)).WithUpdatedDescription("Saved at: " + System.DateTime.Now);
 
@@ -277,5 +286,41 @@ public class GameManager : MonoBehaviour
 		// Read the current data and kick off the callback chain
 		Debug.Log("(Lollygagger) Saved Game: Reading");
 		ReadSavedGame("file_total_hits", readCallback);
+	}
+
+	private void GetCurrentScore()
+	{
+		ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
+		savedGameClient.OpenWithAutomaticConflictResolution("file_total_hits", DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLongestPlaytime, SavedGameOpened);
+	}
+
+	private void SavedGameOpened(SavedGameRequestStatus status, ISavedGameMetadata game)
+	{
+		((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData(game, SavedGameLoaded);
+	}
+
+	private void SavedGameLoaded(SavedGameRequestStatus status, byte[] data)
+	{
+		if (status == SavedGameRequestStatus.Success)
+		{
+			Debug.Log("(Lollygagger) SaveGameLoaded:" + status);
+
+			if (data == null)
+			{
+				Debug.Log("(Lollygagger) No data loaded from the cloud...");
+				return;
+			}
+			Debug.Log("(Lollygagger) Decoding cloud data from bytes.");
+			string progress = Encoding.UTF8.GetString(data);
+			Debug.Log("(Lollygagger) Updating Game Score.");
+			if (progress != "")
+				currentScoreText.text = "Current Score: " + progress;
+			else
+				Debug.Log("(Lollygagger) Loaded save string doesn't have any content");
+		}
+		else
+		{
+			Debug.LogWarning("(Lollygagger) Error reading game: " + status);
+		}
 	}
 }
